@@ -31,23 +31,24 @@ export function Game() {
             <button
                 onClick={() => {
                     if (money >= 1200) {
-                        const draw = Math.random();
-                        let culumativeRate = 0;
-                        for (const [k, v] of Object.entries(units)) {
-                            culumativeRate += Rates[k];
-                            if (draw < culumativeRate) {
-                                dispatch(
-                                    addUnits({
-                                        newUnits: {
-                                            [k]: 1,
-                                        },
-                                        incrementRate: v.incrementRate
-                                    })
-                                );
-                                break;
+                        for (let i=0; i < 10; i++) {
+                            const draw = Math.random();
+                            let culumativeRate = 0;
+                            for (const [k, v] of Object.entries(units)) {
+                                culumativeRate += Rates[k];
+                                if (draw < culumativeRate) {
+                                    dispatch(
+                                        addUnits({
+                                            newUnits: {
+                                                [k]: 1,
+                                            },
+                                            incrementRate: v.incrementRate
+                                        })
+                                    );
+                                    break;
+                                }
                             }
                         }
- 
                     }
                 }}>
                 Draw

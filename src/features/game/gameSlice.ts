@@ -32,7 +32,7 @@ export const gameSlice = createSlice({
             state.money += action.payload;
         },
         addUnits: (state, action: PayloadAction<DrawResults>) => {
-            state.money -= 1200;
+            state.money -= 120;
             state.units = Object.entries(action.payload.newUnits).reduce((acc, [key, value]) => 
                 ({ ...acc, [key]: (acc[key] || 0) + value })
                 , { ...state.units });
