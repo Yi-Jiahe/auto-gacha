@@ -6,10 +6,39 @@ import { tick, addUnits, reset } from "./gameSlice";
 import styles from './Game.module.css';
 import { Rates, units } from "./Units";
 
+interface unitItemProps {
+    unitName: string,
+}
+function UnitItem(props: unitItemProps) {
+    const ownedUnits = useSelector((state: RootState) => state.game.units);
+
+    return ownedUnits[props.unitName] !== undefined ?
+                        <div
+                            key={props.unitName}
+                            className={styles.gridItem}>
+                            <div>{props.unitName}</div>
+                            <div>{ownedUnits[props.unitName]}</div>
+                        </div> :
+                        <div
+                            key={props.unitName}
+                            className={styles.gridItem}>
+                            <div>?</div>
+                            <div>0</div>
+                        </div>;
+}
+
+function Unlocks() {
+
+    return (
+        <div className={styles.gridContainer}>
+            {Object.entries(units).map(([k, _v]) => <UnitItem unitName={k} />)}
+        </div>
+    );
+}
+
 export function Game() {
     const money = useSelector((state: RootState) => state.game.money);
     const earnRate = useSelector((state: RootState) => state.game.incrementRate);
-    const ownedUnits = useSelector((state: RootState) => state.game.units);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -28,43 +57,35 @@ export function Game() {
                 </button>
             </div>
             <div className={styles.mainContent}>
-                <div className={styles.gridContainer}>
-                    {Object.entries(units).map(([k, _v]) => 
-                        <div 
-                            key={k}
-                            className={styles.gridItem}>
-                            {ownedUnits[k] !== undefined ? (<div><div>{k}</div><div>{ownedUnits[k]}</div></div>) : (<div><div>?</div><div>0</div></div>)}
-                        </div>
-                    )}
-                </div>
-                <span>Earn Rate: {earnRate*10}</span>
+                <Unlocks />
+                <span>Earn Rate: {earnRate * 10}</span>
             </div>
             <div className={styles.bottomSticky}>
                 <span>Memory: <span>{money.toFixed(0)}</span></span>
                 <button
-                onClick={() => {
-                    if (money >= 1200) {
-                        for (let i=0; i < 10; i++) {
-                            const draw = Math.random();
-                            let culumativeRate = 0;
-                            for (const [k, v] of Object.entries(units)) {
-                                culumativeRate += Rates[k];
-                                if (draw < culumativeRate) {
-                                    dispatch(
-                                        addUnits({
-                                            newUnits: {
-                                                [k]: 1,
-                                            },
-                                            incrementRate: v.incrementRate
-                                        })
-                                    );
-                                    break;
+                    onClick={() => {
+                        if (money >= 1200) {
+                            for (let i = 0; i < 10; i++) {
+                                const draw = Math.random();
+                                let culumativeRate = 0;
+                                for (const [k, v] of Object.entries(units)) {
+                                    culumativeRate += Rates[k];
+                                    if (draw < culumativeRate) {
+                                        dispatch(
+                                            addUnits({
+                                                newUnits: {
+                                                    [k]: 1,
+                                                },
+                                                incrementRate: v.incrementRate
+                                            })
+                                        );
+                                        break;
+                                    }
                                 }
                             }
                         }
-                    }
-                }}>
-                Focus
+                    }}>
+                    Focus
                 </button>
             </div>
         </div>
