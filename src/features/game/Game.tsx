@@ -21,14 +21,27 @@ export function Game() {
 
     return (
         <div>
-            <div>
-                <span>{money.toFixed(0)}</span>
+            <div className={styles.topSticky}>
                 <button
                     onClick={() => dispatch(reset())}>
                     Reset
                 </button>
             </div>
-            <button
+            <div className={styles.mainContent}>
+                <div className={styles.gridContainer}>
+                    {Object.entries(units).map(([k, _v]) => 
+                        <div 
+                            key={k}
+                            className={styles.gridItem}>
+                            {ownedUnits[k] !== undefined ? (<div><div>{k}</div><div>{ownedUnits[k]}</div></div>) : (<div><div>?</div><div>0</div></div>)}
+                        </div>
+                    )}
+                </div>
+                <span>Earn Rate: {earnRate*10}</span>
+            </div>
+            <div className={styles.bottomSticky}>
+                <span>Memory: <span>{money.toFixed(0)}</span></span>
+                <button
                 onClick={() => {
                     if (money >= 1200) {
                         for (let i=0; i < 10; i++) {
@@ -51,17 +64,8 @@ export function Game() {
                         }
                     }
                 }}>
-                Draw
-            </button>
-            <span>Earn Rate: {earnRate*10}</span>
-            <div className={styles.gridContainer}>
-                {Object.entries(units).map(([k, _v]) => 
-                    <div 
-                        key={k}
-                        className={styles.gridItem}>
-                        {ownedUnits[k] !== undefined ? (<div><div>{k}</div><div>{ownedUnits[k]}</div></div>) : (<div><div>?</div><div>0</div></div>)}
-                    </div>
-                )}
+                Focus
+                </button>
             </div>
         </div>
     );
